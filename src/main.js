@@ -1,10 +1,9 @@
 import { fetchImages } from './js/pixabay-api.js';
-import { renderGallery, showError } from './js/render-functions.js';
+import { renderGallery, showError, clearGallery } from './js/render-functions.js';
 import './css/loader.css';
-import './css/styles.css';
 
 const form = document.querySelector('#search-form');
-const loader = document.querySelector('#loader'); // Перевір, чи цей селектор правильний
+const loader = document.querySelector('#loader'); 
 
 function showLoader() {
   loader.hidden = false;
@@ -19,18 +18,21 @@ form.addEventListener('submit', async (event) => {
 
   const query = form.elements.searchQuery.value.trim();
 
+  // Очищення галереї перед новим пошуком
+  clearGallery();
+
   if (!query) {
-    showError('Please enter a search query!');
+    showError(`You didn't enter anything!`);
     return;
   }
 
   try {
-    showLoader(); 
+    showLoader(); // Показуємо прелоадер перед запитом
     const data = await fetchImages(query);
-    hideLoader(); 
+    hideLoader(); // Приховуємо прелоадер після отримання відповіді
 
     if (data.hits.length === 0) {
-      showError('Sorry, there are no images matching your search query. Please try again!');
+      showError('Nothing was found for your query. Please try a different search term!');
       return;
     }
 
@@ -38,8 +40,8 @@ form.addEventListener('submit', async (event) => {
 
   } catch (error) {
     hideLoader(); // Приховуємо прелоадер при помилці
-    console.error('Помилка при завантаженні зображень:', error);
-    showError('An error occurred while fetching data. Please try again later.');
+    console.error('Error loading images:', error);
+    showError('Sorry, there are no images matching your search query. Please try again!');
   }
 });
 

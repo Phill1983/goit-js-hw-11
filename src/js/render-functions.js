@@ -8,6 +8,11 @@ import svgIcon from '../img/Group.svg';
 
 let lightbox = null;
 
+export function clearGallery() {
+    const galleryContainer = document.querySelector('.gallery');
+    galleryContainer.innerHTML = '';
+}
+
 export function renderGallery(images) {
   const galleryContainer = document.querySelector('.gallery');
   const searchInput = document.querySelector('input[type="text"]');
